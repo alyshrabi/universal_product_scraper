@@ -1,6 +1,17 @@
+const express = require('express');
 const fetch = require('node-fetch');
 
-(async () => {
+const app = express();
+const port = process.env.PORT || 3000;
+
+// 🟢 نقطة البداية
+app.get('/', async (req, res) => {
+  const targetUrl = req.query.url;
+
+  if (!targetUrl) {
+    return res.status(400).send("❌ Please provide ?url= parameter");
+  }
+
   try {
     const response = await fetch('https://api.brightdata.com/request', {
       method: 'POST',
@@ -10,15 +21,20 @@ const fetch = require('node-fetch');
       },
       body: JSON.stringify({
         zone: 'scraping_browser1',
-        url: 'https://www.alibaba.com/product-detail/JZ-1110-Wholesale-Wireless-Portable-Mini_1601270405466.html',
-        format: 'raw'
+        url: targetUrl,
+        format: 'raw'  // يرجع HTML مباشر
       })
     });
 
     const html = await response.text();
-    console.log('📄 HTML content loaded successfully:\n\n');
-    console.log(html.slice(0, 1000)); // اطبع أول 1000 حرف فقط للتجربة
+    res.send(html);
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error('❌ Error fetching:', error);
+    res.status(500).send(`❌ Failed to fetch URL: ${error.message}`);
   }
-})();
+});
+
+// 🟢 شغل السيرفر
+app.listen(port, () => {
+  console.log(`🚀 Server is running on http://localhost:${port}`);
+});
