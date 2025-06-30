@@ -4,7 +4,6 @@ const fetch = require('node-fetch');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// 🟢 نقطة البداية
 app.get('/', async (req, res) => {
   const targetUrl = req.query.url;
 
@@ -22,7 +21,7 @@ app.get('/', async (req, res) => {
       body: JSON.stringify({
         zone: 'scraping_browser1',
         url: targetUrl,
-        format: 'raw'  // يرجع HTML مباشر
+        format: 'raw'
       })
     });
 
@@ -34,7 +33,6 @@ app.get('/', async (req, res) => {
   }
 });
 
-// 🟢 شغل السيرفر
 app.listen(port, () => {
   console.log(`🚀 Server is running on http://localhost:${port}`);
 });
