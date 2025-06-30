@@ -1,0 +1,11 @@
+{
+  "name": "universal-product-scraper",
+  "version": "1.0.0",
+  "main": "universal_product_scraper.js",
+  "scripts": {
+    "start": "node universal_product_scraper.js"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
