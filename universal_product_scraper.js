@@ -23,4 +23,4 @@ async function getPageContent(link) {
 }
 
 // 👇 استبدل اللينك هنا بأي رابط تريده
-getPageContent('https://www.amazon.com/dp/B09G3HRP45');
+//getPageContent('https://www.amazon.com/dp/B09G3HRP45');
