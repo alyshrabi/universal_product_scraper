@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+const fetch = require('node-fetch');
 
 (async () => {
   try {
@@ -11,12 +11,13 @@ import fetch from 'node-fetch';
       body: JSON.stringify({
         zone: 'scraping_browser1',
         url: 'https://www.alibaba.com/product-detail/JZ-1110-Wholesale-Wireless-Portable-Mini_1601270405466.html',
-        format: 'raw' // ⚠️ ده اللي بيرجع لك HTML صافي
+        format: 'raw'
       })
     });
 
     const html = await response.text();
-    console.log('📄 HTML Content:', html.slice(0, 1000)); // عرض أول 1000 حرف فقط عشان متطبعش كله
+    console.log('📄 HTML content loaded successfully:\n\n');
+    console.log(html.slice(0, 1000)); // اطبع أول 1000 حرف فقط للتجربة
   } catch (error) {
     console.error('❌ Error:', error.message);
   }
