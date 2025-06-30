@@ -1,52 +1,26 @@
-const puppeteer = require('puppeteer');
+const fetch = require('node-fetch');
 
-async function scrapeAnyProduct(url) {
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
-
-  const page = await browser.newPage();
-
+async function getPageContent(link) {
   try {
-    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 0 });
-
-    // استخرج المعلومات باستخدام طرق عامة تناسب معظم المواقع
-    const result = await page.evaluate(() => {
-      const title =
-        document.querySelector('h1')?.innerText ||
-        document.querySelector('title')?.innerText ||
-        null;
-
-      const description =
-        document.querySelector('meta[name="description"]')?.content ||
-        document.querySelector('p')?.innerText ||
-        null;
-
-      const price =
-        document.querySelector('[class*="price"]')?.innerText ||
-        document.querySelector('[class*="Price"]')?.innerText ||
-        null;
-
-      const images = Array.from(document.querySelectorAll('img'))
-        .map(img => img.src)
-        .filter(src => src.startsWith('http') && !src.includes('svg'))
-        .slice(0, 10); // اختصر الصور لـ10
-
-      return { title, description, price, images };
+    const response = await fetch('https://api.brightdata.com/request', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer 65b4d8cf09d702e116fc3ec28ef2a3c1208de65f432867546928b088b9dbe76a',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        zone: 'scraping_browser1',
+        url: link,
+        format: 'json' // هترجعلك صفحة HTML داخل content
+      })
     });
 
-    await browser.close();
-    return result;
+    const data = await response.json();
+    console.log('✅ Page content:\n', data.content); // هنا تقدر تعمل extract من الـ HTML
   } catch (err) {
-    await browser.close();
-    return { error: "❌ Failed to scrape product", details: err.message };
+    console.error('❌ Error:', err.message);
   }
 }
 
-// للاختبار المحلي
-(async () => {
-  const testUrl = 'https://www.example.com/product'; // ← ضع أي رابط منتج حقيقي هنا
-  const data = await scrapeAnyProduct(testUrl);
-  console.log(JSON.stringify(data, null, 2));
-})();
+// 👇 استبدل اللينك هنا بأي رابط تريده
+getPageContent('https://www.amazon.com/dp/B09G3HRP45');
